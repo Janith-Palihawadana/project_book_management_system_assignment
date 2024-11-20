@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','getAllAuthorsList','authorStatusChange']]);
     }
 
     public function register(Request $request): \Illuminate\Http\JsonResponse
@@ -42,14 +42,13 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        var_dump("hit me");
-        return response()->json("SUCESS", 201);
+        return response()->json("Successful", 201);
     }
 
     public function getAllAuthorsList(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $validator = ValidationService::getValidator($request->all());
+            $validator = ValidationService::getValidatorAuthors($request->all());
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
@@ -89,5 +88,26 @@ class AuthController extends Controller
             return response()->json(['error' => 'Failed to fetch authors', 'message' => $e->getMessage(),], 500);
         }
 
+    }
+
+    public function authorStatusChange(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $validator = ValidationService::getAuthorDetailValidator($request->all());
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            $get_author = User::where('user_ref',$request['author_ref'])->first();
+            $get_author->is_active = $request['is_active'];
+            $get_author->save();
+            return response()->json("Author status change Successful", 201);
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            return response()->json(['error' => 'Author status change unsuccessful', 'message' => $e->getMessage(),], 500);
+        }
     }
 }

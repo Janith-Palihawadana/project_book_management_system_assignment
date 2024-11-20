@@ -18,7 +18,8 @@ class Books extends Model
         'title',
         'description',
         'cover_image',
-        'is_active'
+        'is_active',
+        'author_id'
     ];
 
     public static function getAllBooks(array $all, $count): \Illuminate\Database\Eloquent\Collection|int|array
@@ -33,14 +34,14 @@ class Books extends Model
         return self::extracted($all, $allBooks, $count);
     }
 
-    public static function getAllBooksByAuthor(array $all, $count): \Illuminate\Database\Eloquent\Collection|array|int
+    public static function getAllBooksByAuthor($id,array $all, $count): \Illuminate\Database\Eloquent\Collection|array|int
     {
         $allBooks = Books::query()
             ->select('books.*','users.name As author_name')
             ->join('users','books.author_id','=','users.id')
             ->where('books.is_active',true)
-            ->where('users.is_active',true)
-            ->where('users.user_ref',$all['author_ref']);
+            ->where('books.author_id',$id)
+            ->where('users.is_active',true);
 
         return self::extracted($all, $allBooks, $count);
     }
@@ -65,6 +66,15 @@ class Books extends Model
             ->offset($start_no)
             ->limit($page_size)
             ->get();
+    }
+
+    public static function updateBook(array $all)
+    {
+        $book = Books::where('book_ref',$all['book_ref'])->first();
+
+        $book->description = $all['description'];
+        $book->title = $all['title'];
+        $book->save();
     }
 
 }

@@ -36,14 +36,17 @@ class User extends Authenticatable
     {
         $all_author = User::query()
             ->select("users.*")
-            ->where('users.role_id','=', 2)
-            ->where('users,is_active', true);
+            ->where('users.role_id','=', 2);
 
            if(!empty($all['keyword'])){
                $all_author->where(function ($query) use ($all){
                    $query->where('users.name', 'LIKE', '%' . $all['keyword'] . '%');
                });
            }
+
+        if ($all['is_active'] === true || $all['is_active'] === false) {
+            $all_author->where('users.is_active', $all['is_active']);
+        }
 
         if ($count) {
             return $all_author->count();
