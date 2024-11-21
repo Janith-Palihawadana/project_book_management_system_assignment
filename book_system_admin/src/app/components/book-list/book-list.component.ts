@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ComponentService} from "../component.service";
+import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-book-list',
@@ -13,9 +15,12 @@ export class BookListComponent {
   totalRecords: number = 0;
   page = 1;
   pageSize = 10;
+  modalImage: string = '';
   constructor(
     private formBuilder: FormBuilder,
-    private componentService : ComponentService
+    private componentService : ComponentService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
   )
   {
     this.filterForm = this.formBuilder.group({
@@ -33,13 +38,15 @@ export class BookListComponent {
   }
 
   _fetchData() {
+    this.spinner.show();
       this.componentService.getBookList(this.filterForm.value,this.page,this.pageSize).subscribe({
         next:(response:any)=>{
           this.tableData = response.all_books;
           this.totalRecords = response.totalRecords;
-          console.log('data Successful');
+          this.spinner.hide();
         },error:(error : any) =>{
-          console.log('data Unsuccessful:');
+          this.spinner.hide();
+          this.toastr.error('Something went wrong!', 'Error');
         }
       });
   }
@@ -47,5 +54,9 @@ export class BookListComponent {
   onPageChange = (pageNumber: number) => {
     this.page = pageNumber;
     this._fetchData();
+  }
+
+  setImageForModal(imageUrl: string): void {
+    this.modalImage = imageUrl;
   }
 }

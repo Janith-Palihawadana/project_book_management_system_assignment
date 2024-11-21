@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ComponentService} from "../component.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgxSpinnerService} from "ngx-spinner";
+import Swal from 'sweetalert2';
+import {ToastrService} from "ngx-toastr";
+
 
 @Component({
   selector: 'app-own-book-list',
@@ -20,11 +24,14 @@ export class OwnBookListComponent {
   isEditMode = false;
   editingRow: any = null;
   selectedFile: File | null = null;
+  modalImage: string = '';
 
   constructor(
-      private fb: FormBuilder,
-      private componentService : ComponentService,
-      private modalService: NgbModal
+    private fb: FormBuilder,
+    private componentService : ComponentService,
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   )
   {
     this.filterForm = this.fb.group({
@@ -47,13 +54,15 @@ export class OwnBookListComponent {
   }
 
   _fetchData() {
+    this.spinner.show();
     this.componentService.getBookListByAuthor(this.filterForm.value,this.page,this.pageSize).subscribe({
       next:(response:any)=>{
         this.tableData = response.all_books;
         this.totalRecords = response.totalRecords;
-        console.log('data Successful');
+        this.spinner.hide();
       },error:(error : any) =>{
-        console.log('data Unsuccessful:');
+        this.spinner.hide();
+        this.toastr.error('Something went wrong!', 'Error');
       }
     });
   }
@@ -64,15 +73,32 @@ export class OwnBookListComponent {
   }
 
   deleteRow(book_ref: any) {
-    this.componentService.deleteBook(book_ref).subscribe({
-      next:(response:any)=>{
-        this._fetchData();
-        console.log('data Successful');
-      },error:(error : any) =>{
-        console.log('data Unsuccessful:');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.spinner.show();
+        this.componentService.deleteBook(book_ref).subscribe({
+          next: (response: any) => {
+            this._fetchData();
+            this.spinner.hide();
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+          },
+          error: (error: any) => {
+            this.spinner.hide();
+            Swal.fire('Failed!', 'There was an error deleting the item.', 'error');
+          }
+        });
       }
-    })
+    });
   }
+
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -91,6 +117,7 @@ export class OwnBookListComponent {
     if (!this.bookForm.valid) {
       return;
     }
+    this.spinner.show();
 
     const formData = new FormData();
 
@@ -107,11 +134,13 @@ export class OwnBookListComponent {
       this.componentService.updateBook(this.editingRow.book_ref, formData).subscribe({
         next: (response: any) => {
           this._fetchData();
+          this.selectedFile = null;
           modal.close();
-          console.log('Book updated successfully');
+          this.spinner.hide();
+          this.toastr.success('Book updated successfully!','Success');
         },
         error: (error: any) => {
-          console.log('Update failed:', error);
+          this.toastr.error('Something went wrong!', 'Error');
         },
       });
     } else {
@@ -119,10 +148,11 @@ export class OwnBookListComponent {
         next: (response: any) => {
           this._fetchData();
           modal.close();
-          console.log('Book created successfully');
+          this.spinner.hide();
+          this.toastr.success('Book created successfully!', 'Success');
         },
         error: (error: any) => {
-          console.log('Creation failed:', error);
+          this.toastr.error('Something went wrong!', 'Error');
         },
       });
     }
@@ -145,4 +175,7 @@ export class OwnBookListComponent {
   }
 
 
+  setImageForModal(imageUrl: string): void {
+    this.modalImage = imageUrl;
+  }
 }

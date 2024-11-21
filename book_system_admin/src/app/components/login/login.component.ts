@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ComponentService} from "../component.service";
+import {AuthService} from "../../auth.service";
+import {Router} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -10,11 +14,14 @@ import {ComponentService} from "../component.service";
 export class LoginComponent {
   loginForm: FormGroup;
   submitted = false;
-  fieldTextType: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private componentService : ComponentService
+    private componentService : ComponentService,
+    private authService :AuthService,
+    private router : Router,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
   ) {
     this.loginForm = this.fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -31,11 +38,19 @@ export class LoginComponent {
     }
     const formData = this.loginForm.value;
 
+    this.spinner.show();
     this.componentService.login(formData).subscribe({
       next:(response:any)=>{
-        console.log('Login Successful:', formData);
+        localStorage.setItem('access_token', response.token);
+        localStorage.setItem('userName', response.name);
+        localStorage.setItem('key', response.key);
+        this.authService.login(response.token);
+        this.spinner.hide();
+        this.router.navigate(['/home']);
+        this.toastr.success('Login successfully','Success')
       },error:(error : any) =>{
-        console.log('Login Unsuccessful:');
+        this.spinner.hide();
+        this.toastr.error('Something went wrong!', 'Error');
       }
     });
   }

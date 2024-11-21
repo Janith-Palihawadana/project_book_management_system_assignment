@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  //padding: 15px 25px 15px 15px !important;
+  border-radius: 100px;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 10px;
+  animation: fade-in 0.5s;
+}
+
+/* Customize Success Toast */
+.toast-success {
+  background-color: #4CAF50 !important; // Custom green color
+  color: white;
+}
+
+/* Customize Error Toast */
+.toast-error {
+  background-color: #F44336 !important; // Custom red color
+  color: white;
+}
+
+/* Customize Info Toast */
+.toast-info {
+  background-color: #2196F3 !important; // Custom blue color
+  color: white;
+}
+
+/* Customize Warning Toast */
+.toast-warning {
+  background-color: #FF9800 !important; // Custom orange color
+  color: white;
+}
+
+.toast-top-right {
+  top: 20px !important;
+  right: 20px !important;
+}

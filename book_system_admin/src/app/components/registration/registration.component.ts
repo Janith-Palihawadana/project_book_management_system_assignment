@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ComponentService} from "../component.service";
+import {Router} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-registration',
@@ -13,7 +16,10 @@ export class RegistrationComponent {
 
   constructor(
     private fb : FormBuilder,
-    private componentService : ComponentService
+    private componentService : ComponentService,
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
   ) {
 
     this.registrationForm = this.fb.group({
@@ -33,21 +39,21 @@ export class RegistrationComponent {
     return password === confirmPassword ? null : { 'mismatch': true };
   }
 
-
   onSubmit(): void {
+    this.spinner.show();
     if (this.registrationForm.valid) {
-
       this.componentService.registration(this.registrationForm.value).subscribe({
         next : (response:any)=>{
-          console.log('Form Submitted!', this.registrationForm.value);
+          this.router.navigate(['/login']);
+          this.registrationForm.reset();
+          this.spinner.hide();
+          this.toastr.success('Registration successfully','Success')
         },error:(error : any) =>{
-          console.log('Login Unsuccessful:');
+          this.spinner.hide();
+          this.toastr.error('Something went wrong!', 'Error');
         }
       });
     }
   }
-
-
-
 
 }

@@ -1,3 +1,4 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="mx-5 mt-2">
   <div class="mb-4">
     <h2>Book List</h2>
@@ -14,17 +15,11 @@
         <button type="submit" class="btn btn-sm btn-primary px-2 px-xl-4 me-1 mx-2">Search</button>
         <button type="button" class="btn btn-sm btn-primary px-2 px-xl-4 ms-1" (click)="filterReset()">Reset</button>
       </div>
-      <div class="col-md-6 col-xl-6">
-        <div class="d-flex justify-content-end mt-2">
-          <a href="/login" class="btn btn-link">Login</a>
-          <a href="/register" class="btn btn-link ms-2">Register</a>
-        </div>
-      </div>
     </div>
   </form>
 
   <div class="table-responsive mt-4">
-    <table class="table table-bordered table-sm table-hover">
+    <table class="table table-sm ">
       <thead class="bg-soft-light">
       <tr class="th-width">
         <th scope="col">Cover Image</th>
@@ -35,10 +30,15 @@
       </thead>
       <tbody>
       <tr *ngFor="let row of tableData;">
-        <td>{{ row.cover_image }}</td>
-        <td>{{ row.title</td>
+        <td>
+          <img
+            [src]="row.cover_image_url || 'assets/images/default_image.jpg'"
+            alt="Book Cover" class="img-thumbnail" style="max-height: 50px; max-width: 50px; cursor: pointer" data-bs-toggle="modal" data-bs-target="#imageModal"
+            (click)="setImageForModal(row.cover_image_url || 'assets/images/default_image.jpg')">
+        </td>
+        <td>{{ row.title}}</td>
         <td>{{ row.author_name }}</td>
-        <td>{{ row.created_at }}</td>
+        <td>{{ row.created_at | date:'yyyy-MM-dd' }}</td>
       </tr>
       <tr *ngIf="tableData <= 0">
         <td colspan="18" class="fs-7">No records found</td>
@@ -59,8 +59,24 @@
       <span class="fs-12 ms-3">Entries : {{ totalRecords }}</span>
     </div>
       <div class="col-12 col-sm-6 mt-3 mt-sm-0 d-flex justify-content-end">
-        <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="5" [directionLinks]="true" [autoHide]="false"></pagination-controls>
+        <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="5" [directionLinks]="true" [autoHide]="true"></pagination-controls>
       </div>
   </div>
+</div>
 
+
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Book Cover</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img [src]="modalImage" alt="Book Cover" class="img-fluid">
+      </div>
+    </div>
+  </div>
 </div>

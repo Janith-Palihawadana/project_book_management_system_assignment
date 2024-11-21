@@ -1,3 +1,4 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="mx-5 mt-2">
   <div class="mb-4">
     <h2>Authors List</h2>
@@ -11,12 +12,10 @@
                formControlName="keyword">
       </div>
       <div class="col-md-3 col-xl-2 mt-2 mt-xl-0">
-        <div class="form-select">
-          <ng-select [clearable]="false" [searchable]="false" formControlName="is_active">
-            <ng-option [value]="true">Active</ng-option>
-            <ng-option [value]="false">Inactive</ng-option>
-          </ng-select>
-        </div>
+        <select formControlName="is_active" class="form-control form-control-sm">
+          <option [value]="true">Active</option>
+          <option [value]="false">Inactive</option>
+        </select>
       </div>
       <div class="col-md-3 col-xl-3 mt-2 mt-xl-0">
         <button type="submit" class="btn btn-sm btn-primary px-2 px-xl-4 me-1 mx-2">Search</button>
@@ -73,8 +72,7 @@
       <span class="fs-12 ms-3">Entries : {{ totalRecords }}</span>
     </div>
     <div class="col-12 col-sm-6 mt-3 mt-sm-0 d-flex justify-content-end">
-      <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="5" [directionLinks]="true" [autoHide]="false"></pagination-controls>
+      <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="5" [directionLinks]="true" [autoHide]="true"></pagination-controls>
     </div>
   </div>
-
 </div>
