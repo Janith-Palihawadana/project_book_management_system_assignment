@@ -6,8 +6,8 @@
       <div class="form-group">
         <label for="email">Email<span class="text-danger">*</span></label>
         <input id="email" formControlName="email" class="form-control" type="email" />
-        <div *ngIf="loginForm.get('name')?.invalid && loginForm.get('name')?.touched" class="text-danger">
-          Name is required.
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+          Email is required.
         </div>
       </div>
 
@@ -15,7 +15,7 @@
         <label for="password">Password<span class="text-danger">*</span> </label>
         <input id="password" formControlName="password" class="form-control" type="password" />
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
-          Name is required.
+          Password is required.
         </div>
       </div>
 

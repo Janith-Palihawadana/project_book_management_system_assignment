@@ -42,7 +42,10 @@ class UserController extends Controller
 
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json("User does not exist", 422);
+                return response()->json("User does not exist", 500);
+            }
+            if(!$user->is_active){
+                return response()->json("Inactive User", 500);
             }
 
             $credentials = $request->only('email', 'password');

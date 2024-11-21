@@ -50,7 +50,7 @@ export class LoginComponent {
         this.toastr.success('Login successfully','Success')
       },error:(error : any) =>{
         this.spinner.hide();
-        this.toastr.error('Something went wrong!', 'Error');
+        this.toastr.error('Check your email & password!', 'Error');
       }
     });
   }

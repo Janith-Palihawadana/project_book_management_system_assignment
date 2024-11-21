@@ -17,6 +17,7 @@ import {AuthInterceptorService} from "./auth-interceptor.service";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {ToastrModule} from "ngx-toastr";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {NgxSpinnerModule} from "ngx-spinner";
     NgbDropdownModule,
     NgbTooltip,
     ToastrModule.forRoot(),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NoopAnimationsModule
   ],
   providers: [
     {

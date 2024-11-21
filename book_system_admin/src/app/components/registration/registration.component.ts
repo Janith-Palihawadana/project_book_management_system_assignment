@@ -50,7 +50,7 @@ export class RegistrationComponent {
           this.toastr.success('Registration successfully','Success')
         },error:(error : any) =>{
           this.spinner.hide();
-          this.toastr.error('Something went wrong!', 'Error');
+          this.toastr.error('The email has already been taken.!', 'Error');
         }
       });
     }

@@ -8,6 +8,12 @@
       <sourceFolder url="file://$MODULE_DIR$/book_system_api/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/book_system_api/tests/Feature" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/book_system_api/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/app" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/api_book_system/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/book_system_api/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/book_system_api/vendor/carbonphp/carbon-doctrine-types" />
       <excludeFolder url="file://$MODULE_DIR$/book_system_api/vendor/composer" />
